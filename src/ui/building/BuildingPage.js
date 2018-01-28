@@ -6,7 +6,7 @@ import BuildingUserPage from "./user/BuildingUserPage";
 const BuildingPage = (props) => {
     return (
         <Switch>
-            <Route exact path="/buildings/:buildingId/levels/:levelId/:layer" component={BuildingUserPage} />
+            <Route exact path="/buildings/:buildingId/levels/:levelId/:layer/:mode?/:markerId?" component={BuildingUserPage} />
             <Route exact path="/buildings/:id?" component={BuildingAdminPage} />
         </Switch>
     )

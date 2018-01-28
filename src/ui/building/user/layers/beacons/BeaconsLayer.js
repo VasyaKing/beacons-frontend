@@ -1,16 +1,20 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import LayerBase from "../LayerBase";
+import BeaconsService from "../../../../../service/BeaconsService";
 
-const BeaconsLayer = (props) => {
-    return (
-        <div>
-            This is beacons layer
-        </div>
-    )
-};
+class BeaconsLayer extends LayerBase {
+    static getMarkers = (building, level) => {
+        return BeaconsService.findAll(building, level);
+    };
+
+    render() {
+        return (
+            <div></div>
+        )
+    }
+}
 
 BeaconsLayer.propTypes = {
-
 };
 
 export default BeaconsLayer;
