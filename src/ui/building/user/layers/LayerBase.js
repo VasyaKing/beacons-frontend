@@ -8,6 +8,10 @@ class LayerBase extends React.Component {
             debugger;
         });
     };
+
+    static onMarkerClick = (marker) => {
+        alert("Function onMarkerClick is not declared in layer class");
+    };
 }
 
 export default LayerBase;

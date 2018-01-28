@@ -2,13 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LayerBase from "../LayerBase";
 import PlacesService from "../../../../../service/PlacesService";
-import {withRouter} from "react-router-dom";
+import {Route, withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {RaisedButton} from "material-ui";
+import PlaceEditDialog from "./PlaceEditDialog";
 
 class PlacesLayer extends LayerBase {
     static getMarkers = (building, level) => {
         return PlacesService.findAll(building, level);
+    };
+
+    static onMarkerClick = (marker, { history, currentBuildingId, currentLevelId }) => {
+        // @TODO, use Navigator
+        history.push(
+            "/buildings/" +
+            currentBuildingId +
+            "/levels/" +
+            currentLevelId +
+            "/places/edit/" +
+            marker.id
+        );
     };
 
     constructor() {
@@ -51,7 +64,11 @@ class PlacesLayer extends LayerBase {
         }
 
         return [
-            actions
+            actions,
+            <Route path="/buildings/:buildingId/levels/:levelId/places/edit/:placeId"
+                   component={PlaceEditDialog}
+                   exact
+                   key="dialog" />
         ]
     }
 }

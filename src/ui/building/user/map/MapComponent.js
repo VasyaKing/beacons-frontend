@@ -5,6 +5,8 @@ import {GoogleMap, Marker, withGoogleMap, withScriptjs} from "react-google-maps"
 const MapComponent = (props) => {
     const markers = props.markers.map(model => {
         return <Marker key={model.id}
+                       onClick={e => props.onMarkerClick(model)}
+                       clickable={props.markerClickable}
                        position={{ lat: model.lat, lng: model.lng }} />
     });
 
@@ -17,7 +19,9 @@ const MapComponent = (props) => {
 };
 
 MapComponent.propTypes = {
-    markers: PropTypes.array.isRequired
+    markerClickable: PropTypes.bool.isRequired,
+    markers: PropTypes.array.isRequired,
+    onMarkerClick: PropTypes.func.isRequired
 };
 
 export default withScriptjs(withGoogleMap(MapComponent));

@@ -31,4 +31,22 @@ PlacesService.findAll = (building, level) => {
     });
 };
 
+PlacesService.createPlace = () => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve({});
+        }, 500)
+    });
+};
+
+PlacesService.findOne = (id) => {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve(MARKERS_MOCK.find(place => {
+                return place.id === id
+            }))
+        }, 1000);
+    });
+};
+
 export default PlacesService;

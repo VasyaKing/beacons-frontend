@@ -13,6 +13,11 @@ class BuildingLevelMapContainer extends Component {
         markers: []
     };
 
+    constructor() {
+        super();
+        this._handleMarkerClick = this._handleMarkerClick.bind(this);
+    };
+
     componentDidMount = () => {
         this._updateMarkers();
     };
@@ -57,6 +62,15 @@ class BuildingLevelMapContainer extends Component {
         alert("Can't find layer for path " + currentPath);
     };
 
+    _handleMarkerClick = (marker) => {
+        const currentLayer = this._getCurrentLayer();
+        currentLayer.onMarkerClick(marker, {
+            history: this.props.history,
+            currentBuildingId: this.props.currentBuildingId,
+            currentLevelId: this.props.currentLevelId
+        });
+    };
+
     render() {
         const url = "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=" +
             "geometry,drawing,places" +
@@ -68,6 +82,8 @@ class BuildingLevelMapContainer extends Component {
                           containerElement={<div style={{ height: '600px' }} />}
                           googleMapURL={url}
                           markers={this.state.markers}
+                          markerClickable={this.props.isEditMode}
+                          onMarkerClick={this._handleMarkerClick}
                           mapElement={<div style={{ height: `100%` }} />}
             />
         ]
@@ -81,11 +97,13 @@ BuildingLevelMapContainer.propTypes = {
     currentPath: PropTypes.string.isRequired,
     currentBuildingId: PropTypes.number.isRequired,
     currentLevelId: PropTypes.number.isRequired,
-    currentLayer: PropTypes.string.isRequired
+    currentLayer: PropTypes.string.isRequired,
+    isEditMode: PropTypes.bool.isRequired
 };
 
 const mapState = (state, ownProps) => {
     return {
+        isEditMode: ownProps.match.params.mode === "edit",
         children: ownProps.children,
         currentPath: ownProps.match.url,
         currentBuildingId: +ownProps.match.params.buildingId,
