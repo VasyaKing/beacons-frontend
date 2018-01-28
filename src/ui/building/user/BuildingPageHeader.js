@@ -11,7 +11,6 @@ import {progressHide, progressShow} from "../../../store/building/BuildingAction
 
 class BuildingPageHeader extends Component {
     state = {
-        currentBuildingId: 0,
         buildingToolbarLoaded: false,
         buildingList: []
     };
@@ -24,7 +23,6 @@ class BuildingPageHeader extends Component {
     componentDidMount = () => {
         this.props.onProgressStart();
         this.setState({
-            currentBuildingId: +this.props.match.params.buildingId,
             buildingToolbarLoaded: false
         });
         BuildingService.findAll()
@@ -64,7 +62,7 @@ class BuildingPageHeader extends Component {
                         <List/>
                     </IconButton>
                     <ToolbarTitle text="Buildings"/>
-                    <DropDownMenu value={this.state.currentBuildingId}
+                    <DropDownMenu value={this.props.currentBuildingId}
                                   disabled={!this.state.buildingToolbarLoaded}
                                   onChange={this._handleSelectBuilding}>
                         {this.state.buildingList}
@@ -76,6 +74,7 @@ class BuildingPageHeader extends Component {
 }
 
 BuildingPageHeader.propTypes = {
+    currentBuildingId: PropTypes.number.isRequired,
     onOpen: PropTypes.func.isRequired,
     match: PropTypes.shape({
         params: PropTypes.shape({
@@ -89,8 +88,10 @@ BuildingPageHeader.propTypes = {
     onProgressEnd: PropTypes.func.isRequired
 };
 
-const mapState = (state) => {
-    return {};
+const mapState = (state, ownProps) => {
+    return {
+        currentBuildingId: +ownProps.match.params.buildingId
+    };
 };
 
 const mapActions = (dispatch) => {

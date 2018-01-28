@@ -9,29 +9,15 @@ import LevelService from "../../../service/LevelService";
 import BuildingNavigation from "../../../navigation/BuildingNavigation";
 
 class BuildingLayerSelector extends Component {
-    state = {
-        currentLayer: "",
-        currentBuildingId: 0,
-        currentLevelId: 0
-    };
-
     constructor() {
         super();
         this._handleLayerChange = this._handleLayerChange.bind(this);
     }
 
-    componentDidMount = () => {
-        this.setState({
-            currentLayer: this.props.match.params.layer,
-            currentBuildingId: +this.props.match.params.buildingId,
-            currentLevelId: +this.props.match.params.levelId
-        });
-    };
-
     _handleLayerChange = (layer) => {
         this.props.onProgressStart();
-        const buildingPromise = BuildingService.findOne(this.state.currentBuildingId);
-        const levelPromise = LevelService.findOne(this.state.currentLevelId);
+        const buildingPromise = BuildingService.findOne(this.props.currentBuildingId);
+        const levelPromise = LevelService.findOne(this.props.currentLevelId);
         Promise.all([
             buildingPromise,
             levelPromise
@@ -47,19 +33,19 @@ class BuildingLayerSelector extends Component {
     render() {
         return [
             <RaisedButton label="Places"
-                          primary={this.state.currentLayer === "places"}
+                          primary={this.props.currentLayer === "places"}
                           onClick={() => this._handleLayerChange("places")}
                           key="places" />,
             <RaisedButton label="Beacons"
-                          primary={this.state.currentLayer === "beacons"}
+                          primary={this.props.currentLayer === "beacons"}
                           onClick={() => this._handleLayerChange("beacons")}
                           key="beacons" />,
             <RaisedButton label="Routes"
-                          primary={this.state.currentLayer === "routes"}
+                          primary={this.props.currentLayer === "routes"}
                           onClick={() => this._handleLayerChange("routes")}
                           key="routes" />,
             <RaisedButton label="Teleports"
-                          primary={this.state.currentLayer === "teleports"}
+                          primary={this.props.currentLayer === "teleports"}
                           onClick={() => this._handleLayerChange("teleports")}
                           key="teleports" />
         ]
@@ -67,6 +53,9 @@ class BuildingLayerSelector extends Component {
 }
 
 BuildingLayerSelector.propTypes = {
+    currentBuildingId: PropTypes.number.isRequired,
+    currentLevelId: PropTypes.number.isRequired,
+    currentLayer: PropTypes.string.isRequired,
     onProgressStart: PropTypes.func.isRequired,
     onProgressEnd: PropTypes.func.isRequired,
     match: PropTypes.shape({
@@ -78,13 +67,18 @@ BuildingLayerSelector.propTypes = {
             levelId: PropTypes.oneOfType([
                 PropTypes.number,
                 PropTypes.string
-            ]).isRequired
+            ]).isRequired,
+            layer: PropTypes.string.isRequired
         }).isRequired
     }).isRequired
 };
 
-const mapState = (state) => {
-    return {};
+const mapState = (state, ownProps) => {
+    return {
+        currentBuildingId: +ownProps.match.params.buildingId,
+        currentLevelId: +ownProps.match.params.levelId,
+        currentLayer: ownProps.match.params.layer
+    };
 };
 
 const mapActions = (dispatch) => {
